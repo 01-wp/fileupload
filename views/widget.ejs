@@ -1,57 +1,157 @@
-<!--*************************************************
-UI for the widget app for rolling notes. Uses React, wix ui lib & html.
-Includes the widget display and play logic.
-*************************************************-->
-
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Widget</title>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/widget-styles.css" wix-style/>
-    <!-- link wix-params to widget styles using wix ui lib
-         more information on inlin wix ui styles: http://wix.github.io/wix-ui-lib/#WixCustomHTMLAttributes-StyleParametersInCssStylesheet-entry -->
-    <style type="text/css" wix-style>
-        .note-widget {
-            {{style.font Heading-M}}
-        }
+<head>
+  <meta charset="utf-8"/>
+  <title>React Draggable</title>
+  <style type="text/css">
+    body {
+      color: #222;
+      font-family: "Helvetica Neue", sans-serif;
+      font-weight: 200;
+      margin: 0 50px;
+    }
 
-        .defaultNote, .wix-style-note {
-            color: {{color-1}};
-            background-color: {{color-8}};
-            border-color: {{color-6}};
-        }
+    .react-draggable, .cursor {
+      cursor: move;
+    }
+    .no-cursor {
+      cursor: auto;
+    }
+    .cursor-y {
+      cursor: ns-resize;
+    }
+    .cursor-x {
+      cursor: ew-resize;
+    }
 
-        .defaultNote:hover {
-            background-color: {{color-9}};
-        }
-    </style>
+    .react-draggable strong {
+      background: #ddd;
+      border: 1px solid #999;
+      border-radius: 3px;
+      display: block;
+      margin-bottom: 10px;
+      padding: 3px 5px;
+      text-align: center;
+    }
+
+    .box {
+      box-sizing: border-box;
+      background: #fff;
+      border: 1px solid #999;
+      border-radius: 3px;
+      width: 180px;
+      height: 180px;
+      margin: 10px;
+      padding: 10px;
+      float: left;
+    }
+  </style>
 </head>
-
 <body>
+<script src="//fb.me/react-with-addons-0.13.2.js"></script>
+<script src="//fb.me/JSXTransformer-0.13.2.js"></script>
+<script src="/javascripts/react-draggable.js"></script>
+<script type="text/jsx">
+  var Draggable = ReactDraggable;
+  var App = React.createClass({
+    getInitialState: function () {
+      return {
+        position: {
+          top: 0, left: 0
+        },
+        activeDrags: 0
+      };
+    },
 
-    <!-- entry point for rendered React code -->
-    <div id="content"></div>
+    handleDrag: function (e, ui) {
+      this.setState({
+        position: ui.position
+      });
+    },
 
-    <!-- get global settings JSON  from database -->
-    <script type="text/javascript">
-        var settings = <%- settings %>;
-    </script>
+    onStart: function() {
+      this.setState({activeDrags: ++this.state.activeDrags});
+    },
 
+    onStop: function() {
+      this.setState({activeDrags: --this.state.activeDrags});
+    },
 
+    render: function () {
+      var drags = {onStart: this.onStart, onStop: this.onStop};
+      return (
+        <div>
+          <h1>React Draggable</h1>
+          <p>Active Drags: {this.state.activeDrags}</p>
+          <p>
+            <a href="https://github.com/mzabriskie/react-draggable/blob/master/example/index.html">Demo Source</a>
+          </p>
+          <Draggable zIndex={100} {...drags}>
+            <div className="box">I can be dragged anywhere</div>
+          </Draggable>
+          <Draggable axis="x" {...drags}>
+            <div className="box cursor-x">I can only be dragged horizonally</div>
+          </Draggable>
+          <Draggable axis="y" {...drags}>
+            <div className="box cursor-y">I can only be dragged vertically</div>
+          </Draggable>
+          <Draggable onDrag={this.handleDrag} {...drags}>
+            <div className="box">
+              <div>I track my position</div>
+              <div>top: {this.state.position.top.toFixed(0)}, left: {this.state.position.left.toFixed(0)}</div>
+            </div>
+          </Draggable>
+          <Draggable handle="strong" {...drags}>
+            <div className="box no-cursor">
+              <strong className="cursor">Drag here</strong>
+              <div>You must click my handle to drag me</div>
+            </div>
+          </Draggable>
+          <Draggable cancel="strong" {...drags}>
+            <div className="box">
+              <strong className="no-cursor">Can't drag here</strong>
+              <div>Dragging here works</div>
+            </div>
+          </Draggable>
+          <Draggable grid={[25, 25]} {...drags}>
+            <div className="box">I snap to a 25 x 25 grid</div>
+          </Draggable>
+          <Draggable grid={[50, 50]} {...drags}>
+            <div className="box">I snap to a 50 x 50 grid</div>
+          </Draggable>
+          <Draggable bounds={{top: -100, left: -100, right: 100, bottom: 100}} zIndex={5} {...drags}>
+            <div className="box">I can only be moved 100px in any direction.</div>
+          </Draggable>
+          <div className="box" style={{height: '500px', width: '500px', position: 'relative'}}>
+            <Draggable bounds="parent" {...drags}>
+              <div className="box">
+                I can only be moved within my offsetParent.<br /><br />
+                Both parent padding and child margin work properly.
+              </div>
+            </Draggable>
+            <Draggable bounds="parent" {...drags}>
+              <div className="box">
+                I also can only be moved within my offsetParent.<br /><br />
+                Both parent padding and child margin work properly.
+              </div>
+            </Draggable>
+          </div>
+          <Draggable>
+            <div className="box" style={{position: 'absolute', bottom: '100px', right: '100px'}} {...drags}>
+              I already have an absolute position.
+            </div>
+          </Draggable>
+          <Draggable start={{x: 25, y: 25}} {...drags}>
+            <div className="box">
+              {"I have a start position of {x: 25, y: 25}, so I'm slightly offset."}
+            </div>
+          </Draggable>
+        </div>
+      );
+    }
+  });
 
-    <script type="text/javascript" src="//sslstatic.wix.com/services/js-sdk/1.33.0/js/Wix.js"></script>
-    <script type="text/javascript" src="http://static.parastorage.com/services/third-party/jquery/2.1.0/jquery.min.js"></script>
-    <script type="text/javascript" src="http://fb.me/react-with-addons-0.11.1.min.js"></script>
-    <!-- build:widget-scripts -->
-    <script type="text/javascript" src="/javascripts/bower_components/react/JSXTransformer.js"></script>
-    <script type="text/javascript" src="/javascripts/bower_components/visibilityjs/lib/visibility.core.js"></script>
-    <script type="text/javascript" src="/javascripts/bower_components/visibilityjs/lib/visibility.timers.js"></script>
-    <script type="text/jsx" src="/javascripts/widget-app.js"></script>
-    <!-- endbuild -->
-
-
-
-
+  React.render(<App/>, document.body);
+</script>
 </body>
 </html>

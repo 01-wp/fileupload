@@ -66,6 +66,8 @@ var WidgetApp = React.createClass({
         /* Listens to changes in site mode */
         Wix.addEventListener(Wix.Events.EDIT_MODE_CHANGE, function(data) {
 
+            console.log('Entering mode : ', data.editMode);
+
             /*If widget enters preview mode, begin playing notes*/
             if (data.editMode === 'preview') {
                 that.playNotes();
@@ -101,6 +103,7 @@ var WidgetApp = React.createClass({
          and plays notes when user returns to the tab.
          */
         Visibility.change(function(e, state) {
+            console.log('Visibility mode : ', state);
             if(state === 'hidden') {
                 that.pauseNotes();
             } else if (state === 'visible'){
@@ -111,6 +114,7 @@ var WidgetApp = React.createClass({
         /*Set note shown in widget to first visible note*/
         that.setState({slideIndex: that.getFirstVisibleNoteIndex()});
         /*If page is opened in site mode, play notes on loop*/
+        console.log('View mode : ', viewMode);
         if (viewMode === 'site' || viewMode === 'preview') {
             this.playNotes();
         }
