@@ -1,0 +1,6 @@
+[ ! -d ./node_modules ] && npm install
+APP="app.js"
+
+#$(which nodemon) "$APP" || $(which node) "$APP"
+`pwd`/bin/www
+

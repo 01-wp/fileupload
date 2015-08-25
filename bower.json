@@ -1,0 +1,32 @@
+{
+  "name": "RollingNotes",
+  "version": "0.0.0",
+  "homepage": "https://github.com/elanas/Playground",
+  "authors": [
+    "Elana Stroud <elanas@wix.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "test"
+  ],
+
+  "dependencies": {
+    "wix-ui-lib2": "latest",
+    "react": "latest",
+    "angular": "latest",
+    "jquery": "latest",
+    "jqueryui": "latest",
+    "angular-ui-sortable": "latest",
+    "angular-mailto": "~0.1.0",
+    "visibilityjs": "latest",
+    "deep-diff" : "latest",
+    "angular-animate" : "latest",
+    "lodash" : "latest",
+    "slimScroll" : "latest"
+  }
+}
