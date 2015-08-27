@@ -11,9 +11,6 @@ var wix = require('openapi-node');
 
 
 //heroku
-//var APP_SECRET = '274cac4b-5816-46a5-b9e6-c9c04c52c46e';
-//var APP_ID = '137f851f-ed9d-9e85-4e0a-b73bc11455e4';
-//local
 var APP_SECRET = process.env.APP_SECRET;
 var APP_ID = process.env.APP_ID;
 var DEBUG = process.env.DEBUG;

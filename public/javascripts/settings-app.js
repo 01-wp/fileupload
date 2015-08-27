@@ -78,6 +78,7 @@ var siteColorStyles;
 
             $http.post(encoded_url, this.settings).success(function() {
                 /* placeholder for success of posting */
+                console.log("Successful post to database");
             }).error(function(data, status, headers, config) {
                  console.log("failed to post to database");
             });
